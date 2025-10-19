@@ -75,6 +75,7 @@
   },
   "resources": [
     "file://.amazonq/rules/principles.md",
+    "file://.amazonq/rules/project.md",
     "file://spec/requirements.md",
     "file://spec/design.md"
   ]

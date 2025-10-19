@@ -187,25 +187,18 @@ personal-account-manager/
 │   ├── requirements.md          # Project requirements
 │   └── design.md                # This document
 │
-├── src/
-│   ├── agent/
-│   │   ├── __init__.py
-│   │   ├── support_agent.py     # SupportAgent class (Strands Agent)
-│   │   └── tools.py             # Tool definitions (@tool decorator)
-│   │
-│   ├── knowledge/
-│   │   ├── __init__.py
-│   │   └── wiki_source.py       # WikiKnowledgeSource class
-│   │
-│   └── config/
+├── agent/
+│   ├── __init__.py
+│   ├── support_agent.py      # SupportAgent class (Strands Agent)
+│   ├── prompts.py            # Prompt and model settings for agent
+│   ├── tools.py              # Tool definitions (@tool decorator)
+│   └── knowledge/
 │       ├── __init__.py
-│       └── settings.py          # Configuration management
+│       └── wiki_source.py    # WikiKnowledgeSource class
 │
-├── infrastructure/
-│   ├── cloudformation/
-│   │   └── deployment-stack.yaml # One-click CloudFormation deployment
-│   └── scripts/
-│       └── deploy.sh            # Deployment automation
+├── deployment/
+│   ├── deployment-stack.yaml # One-click CloudFormation deployment
+│   └── deploy.sh             # Deployment automation
 │
 ├── tests/
 │   ├── unit/
@@ -219,16 +212,16 @@ personal-account-manager/
 
 ### 3.1 Key Files
 
-**src/agent/support_agent.py**
+**agent/support_agent.py**
 - SupportAgent class (Strands Agent)
 - Implements search/retrieve logic for all knowledge sources
 - Defines tools using `@tool` decorator
 
-**src/knowledge/wiki_source.py**
+**agent/knowledge/wiki_source.py**
 - WikiKnowledgeSource class
 - Provides file I/O operations only (clone, load, list)
 
-**infrastructure/cloudformation/deployment-stack.yaml**
+**infrastructure/deployment-stack.yaml**
 - One-click CloudFormation deployment
 - Provisions AgentCore Runtime, Memory, and supporting resources
 - Includes LaunchStack button integration
