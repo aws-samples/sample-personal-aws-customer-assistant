@@ -74,7 +74,7 @@ classDiagram
 
 **WikiKnowledgeSource**
 - **File I/O operations only** - no search logic
-- Clones/updates GitHub wiki repository
+- Clones/updates GitHub wiki repository using GitPython
 - Loads file contents by path
 - Lists available files
 - Simple data access layer
@@ -166,7 +166,7 @@ graph TB
 
 **GitHub Wiki**
 - Source: `https://github.com/aws-samples/sample-one-click-generative-ai-solutions.wiki.git`
-- Access: Git clone (no authentication needed for public wiki)
+- Access: GitPython clone (no authentication needed for public wiki)
 - Update: Periodic pull or on-demand
 
 ### 2.3 Cost Optimization
@@ -214,12 +214,6 @@ personal-account-manager/
 │   └── integration/
 │       └── test_e2e.py
 │
-├── data/
-│   └── wiki/                    # Cloned wiki repository
-│
-├── requirements.txt             # Python dependencies
-├── .bedrock_agentcore.yaml      # AgentCore configuration
-├── Dockerfile                   # Container definition
 └── README.md                    # Project documentation
 ```
 
