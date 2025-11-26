@@ -5,9 +5,9 @@ from typing import Optional
 
 from strands import Agent
 from strands_tools import calculator, http_request
-from knowledge.wiki_source import WikiKnowledgeSource
-from prompts import SUPPORT_AGENT_SYSTEM_PROMPT, MODEL_CONFIG
-from tools import SupportAgentTools
+from agent.knowledge.wiki_source import WikiKnowledgeSource
+from agent.prompts import SUPPORT_AGENT_SYSTEM_PROMPT, MODEL_CONFIG
+from agent.tools import SupportAgentTools
 
 
 class SupportAgent(Agent):

@@ -3,7 +3,7 @@
 
 from strands import tool
 
-from knowledge.wiki_source import WikiKnowledgeSource
+from agent.knowledge.wiki_source import WikiKnowledgeSource
 
 
 class SupportAgentTools:
