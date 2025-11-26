@@ -1,6 +1,16 @@
 # Fundamental Development Principles
 
-## 1. Separation of Concerns
+## 1. Iterative Clarification
+
+**Principle**: Clarify requirements through iterative dialogue before implementation
+- Ask questions when requirements are ambiguous or incomplete
+- Confirm understanding of expected behavior and scope
+- Avoid making assumptions about unstated requirements
+- Iterate on understanding until requirements are clear
+
+**Benefits**: Prevents rework, ensures correct implementation, reduces wasted effort
+
+## 2. Separation of Concerns
 
 **Principle**: Separate I/O operations from business logic
 - **I/O Layer**: Handle file operations, data loading/saving
@@ -9,7 +19,7 @@
 
 **Benefits**: Testability, maintainability, flexibility
 
-## 2. Single Responsibility
+## 3. Single Responsibility
 
 **Principle**: Each class should have one clear purpose
 - Avoid classes that mix multiple responsibilities
@@ -18,7 +28,7 @@
 
 **Example**: DataStore handles all I/O, not split across multiple classes
 
-## 3. Dependency Injection
+## 4. Dependency Injection
 
 **Principle**: Pass dependencies explicitly rather than hardcoding them
 - Classes receive their dependencies as constructor parameters
@@ -27,7 +37,7 @@
 
 **Anti-pattern**: Hardcoded file paths or direct instantiation of dependencies
 
-## 4. Session Safety
+## 5. Session Safety
 
 **Principle**: Manage resource lifecycle carefully
 - Track resource state to prevent duplicate allocation
@@ -36,14 +46,14 @@
 
 **Implementation**: Session state tracking, conditional initialization
 
-## 5. Configuration Over Convention
+## 6. Configuration Over Convention
 
 **Principle**: Make behavior configurable rather than hardcoded
 - Allow users to specify file names, paths, parameters
 - Provide sensible defaults while enabling customization
 - Support multiple input sources (local files, S3, etc.)
 
-## 6. Granular Operations
+## 7. Granular Operations
 
 **Principle**: Provide both atomic and composite operations
 - Enable users to run specific steps independently
@@ -52,28 +62,28 @@
 
 **Benefits**: Debugging, development flexibility, resource efficiency
 
-## 7. Pure Functions Where Possible
+## 8. Pure Functions Where Possible
 
 **Principle**: Prefer functions without side effects
 - Input → Processing → Output (no external state changes)
 - Easier to test, reason about, and parallelize
 - Separate pure logic from I/O operations
 
-## 8. Fail Fast with Clear Messages
+## 9. Fail Fast with Clear Messages
 
 **Principle**: Detect and report errors early with specific information
 - Validate inputs at entry points
 - Provide actionable error messages with context
 - Include relevant identifiers (file names, patient IDs, etc.)
 
-## 9. Encapsulation
+## 10. Encapsulation
 
 **Principle**: Hide implementation details behind clean interfaces
 - Use private methods for internal operations
 - Expose only necessary public methods
 - Group related functionality together
 
-## 10. Resource Management
+## 11. Resource Management
 
 **Principle**: Handle temporary resources responsibly
 - Use temporary directories for session isolation
