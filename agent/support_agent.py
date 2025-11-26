@@ -20,21 +20,23 @@ class SupportAgent(Agent):
     
     def __init__(
         self,
-        wiki_repo_url: str = "https://github.com/aws-samples/sample-one-click-generative-ai-solutions.wiki.git",
-        wiki_local_path: str = "./wiki_data",
+        repo_url: str = "https://github.com/icoxfog417/personal-account-manager",
+        knowledge_dir: str = "docs",
+        local_path: str = "./repo_data",
         system_prompt: Optional[str] = None,
         **kwargs
     ):
         """Initialize SupportAgent.
         
         Args:
-            wiki_repo_url: GitHub wiki repository URL
-            wiki_local_path: Local path to store wiki data
+            repo_url: Repository URL containing knowledge files
+            knowledge_dir: Directory path within repository containing knowledge files
+            local_path: Local path to store repository data
             system_prompt: Custom system prompt for the agent
             **kwargs: Additional arguments passed to Agent constructor
         """
         # Initialize knowledge source (I/O only)
-        self.wiki_source = WikiKnowledgeSource(wiki_repo_url, Path(wiki_local_path))
+        self.wiki_source = WikiKnowledgeSource(repo_url, knowledge_dir, Path(local_path))
         
         # Initialize tools (contains search/retrieve logic)
         self.support_tools = SupportAgentTools(self.wiki_source)
