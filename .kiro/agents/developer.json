@@ -2,17 +2,20 @@
   "name": "developer",
   "description": "Developer Agent",
   "mcpServers": {
-    "AWS Core MCP Server": {
+    "awslabs.core-mcp-server": {
       "command": "uvx",
-      "timeout": 60000,
       "args": [
         "awslabs.core-mcp-server@latest"
       ],
       "env": {
-        "FASTMCP_LOG_LEVEL": "ERROR"
-      }
+        "FASTMCP_LOG_LEVEL": "DEBUG",
+        "aws-foundation": "true",
+        "solutions-architect": "true"
+      },
+      "autoApprove": [],
+      "disabled": false
     },
-    "AWS Documentation MCP Server": {
+    "awslabs.aws-documentation-mcp-server": {
       "command": "uvx",
       "timeout": 60000,
       "args": [
@@ -37,22 +40,15 @@
       "args": ["strands-agents-mcp-server"]
     },
     "aws-knowledge-mcp-server": {
-      "command": "npx",
-      "args": [
-          "mcp-remote",
-          "https://knowledge-mcp.global.api.aws"
-      ]
-    },
-    "chrome-devtools": {
-      "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@latest"]
+      "url": "https://knowledge-mcp.global.api.aws",
+      "type": "http"
     }
   },
   "tools": [
 	"*"
   ],
   "allowedTools": [
-    "fs_read",
+    "read",
     "fsReplace",
     "listDirectory",
     "fileSearch"
@@ -74,8 +70,8 @@
     }
   },
   "resources": [
-    "file://.amazonq/rules/principles.md",
-    "file://.amazonq/rules/project.md",
+    "file://.kiro/steering/principles.md",
+    "file://.kiro/steering/project.md",
     "file://spec/requirements.md",
     "file://spec/design.md"
   ]
