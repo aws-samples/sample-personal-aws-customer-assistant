@@ -1,7 +1,7 @@
 # agent/__main__.py
 import os
 from bedrock_agentcore import BedrockAgentCoreApp
-from support_agent import SupportAgent
+from agent.support_agent import SupportAgent
 
 app = BedrockAgentCoreApp()
 
@@ -9,7 +9,7 @@ app = BedrockAgentCoreApp()
 async def entrypoint(payload):
     # Initialize SupportAgent with wiki search tools
     agent = SupportAgent(
-        wiki_repo_url="https://github.com/aws-samples/sample-one-click-generative-ai-solutions.wiki.git",
+        wiki_repo_url="https://github.com/icoxfog417/personal-account-manager",
         wiki_local_path="./data"
     )
     

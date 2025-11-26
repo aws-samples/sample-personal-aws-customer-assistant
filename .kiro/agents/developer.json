@@ -8,6 +8,7 @@
         "awslabs.core-mcp-server@latest"
       ],
       "env": {
+        "AWS_PROFILE": "default",
         "FASTMCP_LOG_LEVEL": "DEBUG",
         "aws-foundation": "true",
         "solutions-architect": "true"
