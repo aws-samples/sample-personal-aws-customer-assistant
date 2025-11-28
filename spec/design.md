@@ -275,10 +275,62 @@ sequenceDiagram
 
 ## 5. Deployment Strategy
 
-### 5.1 Simplified CDK Deployment Architecture
+### 5.1 One-Click CloudFormation Deployment
 
 **Deployment Approach**
-- Use AWS CDK (Python) for infrastructure as code
+- Single CloudFormation template for complete deployment
+- CodeBuild pipeline automates CDK deployment
+- Lambda trigger initiates build automatically
+- SNS notifications for deployment status
+
+**Architecture**
+
+```mermaid
+graph TB
+    User[Developer] -->|Click Launch Stack| CFN[CloudFormation Stack]
+    
+    CFN -->|Creates| SNS[SNS Topic]
+    CFN -->|Creates| CB[CodeBuild Project]
+    CFN -->|Creates| Lambda[Lambda Trigger]
+    
+    SNS -->|Notifies| Email[Email Subscriber]
+    Lambda -->|Starts| CB
+    
+    subgraph "CodeBuild Pipeline"
+        CB -->|1. Install| Install[Install Node.js & Dependencies]
+        Install -->|2. Clone| Clone[Clone Repository]
+        Clone -->|3. Configure| Config[Update cdk.json]
+        Config -->|4. Bootstrap| Bootstrap[CDK Bootstrap]
+        Bootstrap -->|5. Deploy| Deploy[CDK Deploy]
+        Deploy -->|6. Notify| Notify[Send Completion]
+    end
+    
+    Deploy -->|Creates| AgentStack[Support Agent Stack]
+    Notify -->|Publishes| SNS
+```
+
+**CloudFormation Parameters**
+- `NotificationEmailAddress`: Email for deployment notifications
+- `RepositoryUrl`: Git repository URL (default: personal-account-manager)
+- `KnowledgeDirectory`: Document directory path (default: docs)
+- `DeploymentRegion`: AWS region for agent and Bedrock (default: us-west-2)
+
+**Deployment Flow**
+1. User clicks Launch Stack button
+2. CloudFormation creates SNS topic and subscribes email
+3. CloudFormation creates CodeBuild project with environment variables
+4. Lambda trigger starts CodeBuild automatically
+5. CodeBuild clones this repository
+6. CodeBuild updates `cdk/cdk.json` with parameters
+7. CodeBuild runs CDK bootstrap (if needed)
+8. CodeBuild deploys CDK stack
+9. CodeBuild extracts outputs via CloudFormation API
+10. SNS sends completion notification with agent details
+
+### 5.2 CDK Deployment Architecture
+
+**Deployment Approach**
+- Use AWS CDK (TypeScript) for infrastructure as code
 - Leverage CDK Docker image assets for automatic build and push
 - Auto-created IAM roles via AgentCore
 - Single command deployment: `cdk deploy`

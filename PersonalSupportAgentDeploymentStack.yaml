@@ -1,0 +1,278 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Deploy Personal Support Agent with AgentCore Runtime"
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: "Notification Configuration"
+        Parameters:
+          - NotificationEmailAddress
+      - Label:
+          default: "Knowledge Source Configuration"
+        Parameters:
+          - RepositoryUrl
+          - KnowledgeDirectory
+      - Label:
+          default: "Deployment Configuration"
+        Parameters:
+          - DeploymentRegion
+
+Parameters:
+  NotificationEmailAddress:
+    Type: String
+    Description: Email address for deployment notifications
+    AllowedPattern: ^[^\s@]+@[^\s@]+\.[^\s@]+$
+    ConstraintDescription: Must be a valid email address
+
+  RepositoryUrl:
+    Type: String
+    Default: "https://github.com/icoxfog417/personal-account-manager"
+    Description: Git repository URL containing knowledge documents
+
+  KnowledgeDirectory:
+    Type: String
+    Default: "docs"
+    Description: Directory path within repository containing documents
+
+  DeploymentRegion:
+    Type: String
+    Default: "us-west-2"
+    AllowedValues:
+      - us-east-1
+      - us-west-2
+      - ap-northeast-1
+      - eu-west-1
+    Description: AWS region for agent deployment and Bedrock API
+
+Resources:
+  SNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub "${AWS::StackName}-notifications"
+      DisplayName: PersonalSupportAgent
+
+  SNSSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: email
+      TopicArn: !Ref SNSTopic
+      Endpoint: !Ref NotificationEmailAddress
+
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+      Policies:
+        - PolicyName: SNSPublishPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: !Ref SNSTopic
+
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub "${AWS::StackName}-build"
+      ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_LARGE
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:5.0
+        EnvironmentVariables:
+          - Name: SNS_TOPIC_ARN
+            Value: !Ref SNSTopic
+          - Name: REPOSITORY_URL
+            Value: !Ref RepositoryUrl
+          - Name: KNOWLEDGE_DIRECTORY
+            Value: !Ref KnowledgeDirectory
+          - Name: DEPLOYMENT_REGION
+            Value: !Ref DeploymentRegion
+          - Name: STACK_NAME
+            Value: !Ref AWS::StackName
+      Source:
+        Type: NO_SOURCE
+        BuildSpec: |
+          version: 0.2
+          phases:
+            install:
+              runtime-versions:
+                nodejs: 22
+              commands:
+                - echo "Installing dependencies..."
+                - aws sns publish --topic-arn $SNS_TOPIC_ARN --message "Personal Support Agent deployment started" --subject "Deployment Started"
+            
+            pre_build:
+              commands:
+                - echo "Cloning repository..."
+                - git clone https://github.com/icoxfog417/personal-account-manager.git
+                - cd personal-account-manager/cdk
+                - echo "Installing CDK dependencies..."
+                - npm ci
+                - echo "Updating cdk.json with parameters..."
+                - |
+                  jq --arg repo "$REPOSITORY_URL" \
+                     --arg dir "$KNOWLEDGE_DIRECTORY" \
+                     '.context.agent_config.repo_url = $repo | .context.agent_config.knowledge_dir = $dir' \
+                     cdk.json > cdk.json.tmp && mv cdk.json.tmp cdk.json
+                - cat cdk.json
+
+            build:
+              commands:
+                - echo "Checking CDK bootstrap status..."
+                - |
+                  if ! aws cloudformation describe-stacks --stack-name CDKToolkit --region "$DEPLOYMENT_REGION" 2>/dev/null; then
+                    echo "CDK not bootstrapped, running bootstrap..."
+                    npx cdk bootstrap "aws://$AWS_ACCOUNT_ID/$DEPLOYMENT_REGION"
+                  else
+                    echo "CDK already bootstrapped"
+                  fi
+                - echo "Deploying CDK stack..."
+                - npx cdk deploy --require-approval never --region "$DEPLOYMENT_REGION"
+                - echo "Extracting deployment outputs..."
+                - |
+                  AGENT_STACK_NAME=$(aws cloudformation describe-stacks --region "$DEPLOYMENT_REGION" --query "Stacks[?StackStatus!='DELETE_COMPLETE' && contains(StackName, 'SupportAgent')].StackName" --output text | head -n1)
+                  if [ -n "$AGENT_STACK_NAME" ]; then
+                    RUNTIME_ARN=$(aws cloudformation describe-stacks --stack-name "$AGENT_STACK_NAME" --region "$DEPLOYMENT_REGION" --query "Stacks[0].Outputs[?contains(OutputKey, 'RuntimeArn')].OutputValue" --output text)
+                    RUNTIME_ID=$(aws cloudformation describe-stacks --stack-name "$AGENT_STACK_NAME" --region "$DEPLOYMENT_REGION" --query "Stacks[0].Outputs[?contains(OutputKey, 'RuntimeId')].OutputValue" --output text)
+                    IMAGE_URI=$(aws cloudformation describe-stacks --stack-name "$AGENT_STACK_NAME" --region "$DEPLOYMENT_REGION" --query "Stacks[0].Outputs[?contains(OutputKey, 'ImageUri')].OutputValue" --output text)
+                    
+                    echo "Agent Stack Name: $AGENT_STACK_NAME"
+                    echo "Runtime ARN: $RUNTIME_ARN"
+                    echo "Runtime ID: $RUNTIME_ID"
+                    echo "Image URI: $IMAGE_URI"
+                  else
+                    echo "Warning: Could not find agent stack"
+                    AGENT_STACK_NAME="Not found"
+                    RUNTIME_ARN="Not found"
+                    RUNTIME_ID="Not found"
+                    IMAGE_URI="Not found"
+                  fi
+
+            post_build:
+              commands:
+                - echo "Sending completion notification..."
+                - |
+                  MESSAGE="Personal Support Agent deployment completed successfully!
+                  
+                  Deployment Details:
+                  - Stack Name: $AGENT_STACK_NAME
+                  - Region: $DEPLOYMENT_REGION
+                  - Runtime ARN: $RUNTIME_ARN
+                  - Runtime ID: $RUNTIME_ID
+                  - Image URI: $IMAGE_URI
+                  
+                  Knowledge Source:
+                  - Repository: $REPOSITORY_URL
+                  - Directory: $KNOWLEDGE_DIRECTORY
+                  
+                  Next Steps:
+                  1. Test the agent using AWS CLI or Bedrock AgentCore Console
+                  2. View logs in CloudWatch Logs
+                  3. Monitor traces in X-Ray
+                  
+                  To invoke the agent:
+                  aws bedrock-agentcore invoke-agent-runtime \\
+                    --agent-runtime-arn $RUNTIME_ARN \\
+                    --qualifier DEFAULT \\
+                    --payload \$(echo '{\"prompt\": \"Your question\"}' | base64) \\
+                    response.json"
+                  
+                  aws sns publish --topic-arn $SNS_TOPIC_ARN --message "$MESSAGE" --subject "Deployment Completed"
+
+      TimeoutInMinutes: 60
+
+  LambdaTriggerRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: CodeBuildStartPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                Resource: !GetAtt CodeBuildProject.Arn
+
+  LambdaTriggerFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Sub "${AWS::StackName}-trigger"
+      Runtime: python3.12
+      Handler: index.handler
+      Role: !GetAtt LambdaTriggerRole.Arn
+      Timeout: 60
+      Environment:
+        Variables:
+          CODEBUILD_PROJECT_NAME: !Ref CodeBuildProject
+      Code:
+        ZipFile: |
+          import boto3
+          import cfnresponse
+          import os
+          
+          codebuild = boto3.client('codebuild')
+          
+          def handler(event, context):
+              print(f"Event: {event}")
+              
+              try:
+                  if event['RequestType'] in ['Create', 'Update']:
+                      project_name = os.environ['CODEBUILD_PROJECT_NAME']
+                      response = codebuild.start_build(projectName=project_name)
+                      build_id = response['build']['id']
+                      print(f"Started CodeBuild: {build_id}")
+                      cfnresponse.send(event, context, cfnresponse.SUCCESS, {'BuildId': build_id})
+                  else:
+                      cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
+              except Exception as e:
+                  print(f"Error: {str(e)}")
+                  cfnresponse.send(event, context, cfnresponse.FAILED, {'Error': str(e)})
+
+  TriggerCodeBuild:
+    Type: Custom::TriggerCodeBuild
+    DependsOn:
+      - CodeBuildProject
+      - SNSSubscription
+    Properties:
+      ServiceToken: !GetAtt LambdaTriggerFunction.Arn
+
+Outputs:
+  SNSTopicArn:
+    Description: SNS Topic ARN for notifications
+    Value: !Ref SNSTopic
+
+  CodeBuildProjectName:
+    Description: CodeBuild project name
+    Value: !Ref CodeBuildProject
+
+  DeploymentRegion:
+    Description: Region where agent is deployed
+    Value: !Ref DeploymentRegion
+
+  KnowledgeSource:
+    Description: Knowledge source configuration
+    Value: !Sub "${RepositoryUrl}/${KnowledgeDirectory}"

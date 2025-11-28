@@ -54,3 +54,32 @@ Build an AWS customer support agent that serves as an alternative to traditional
   * Customer environment details
   * Skill level
   * Applied settings
+
+## Developer Experience
+
+### One-Click Deployment
+
+Provide a seamless deployment experience for developers who want to quickly deploy the Personal Support Agent:
+
+* **Launch Stack Button**: Single-click deployment via AWS CloudFormation console
+* **Configurable Knowledge Source**: Specify custom repository URL and document directory
+* **Automated Build Pipeline**: CodeBuild automatically clones repository, installs dependencies, and deploys CDK stack
+* **Email Notifications**: Receive deployment status updates via SNS
+* **Regional Deployment**: Choose deployment region (agent and Bedrock use same region)
+* **Complete Infrastructure**: Automatically provisions AgentCore Runtime, Memory, and all required IAM roles
+* **Deployment Time**: 10-15 minutes from click to fully operational agent
+
+#### Configurable Parameters
+
+* **NotificationEmailAddress**: Email for deployment notifications
+* **RepositoryUrl**: Git repository containing knowledge documents (default: personal-account-manager)
+* **KnowledgeDirectory**: Directory path within repository containing documents (default: docs)
+* **DeploymentRegion**: AWS region for agent and Bedrock (default: us-west-2)
+
+This approach enables developers to:
+1. Click "Launch Stack" button in README
+2. Configure knowledge source and deployment region
+3. Wait for deployment completion email
+4. Start using the agent with their custom knowledge base
+
+The CloudFormation template handles all complexity: repository cloning, dependency installation, CDK configuration update, CDK bootstrapping, stack deployment, and resource provisioning.

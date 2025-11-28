@@ -7,18 +7,55 @@ An AI-powered customer support agent that serves as an alternative to traditiona
 - **Knowledge Integration**: Searches repository documentation from GitHub
 - **Conversation Memory**: Stores customer context using AgentCore Memory (STM + LTM)
 - **Serverless Deployment**: Runs on AgentCore Runtime with auto-scaling
-- **CDK Deployment**: Infrastructure as code with AWS CDK
+- **One-Click Deployment**: Deploy via CloudFormation with custom knowledge sources
 
 ## Quick Start
 
-### Prerequisites
+### One-Click Deployment
+
+Deploy the Personal Support Agent with a single click using AWS CloudFormation:
+
+[![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/review?stackName=PersonalSupportAgentStack&templateURL=https://raw.githubusercontent.com/icoxfog417/personal-account-manager/main/PersonalSupportAgentDeploymentStack.yaml)
+
+#### Parameters
+
+* **NotificationEmailAddress** (Required)
+  * Email address for deployment notifications
+  * You will receive deployment start and completion notifications
+
+* **RepositoryUrl** (Default: `https://github.com/icoxfog417/personal-account-manager`)
+  * Git repository URL containing knowledge documents
+  * Customize to use your own knowledge base
+
+* **KnowledgeDirectory** (Default: `docs`)
+  * Directory path within repository containing documents
+  * Agent will search files in this directory
+
+* **DeploymentRegion** (Default: `us-west-2`)
+  * AWS region for agent deployment and Bedrock API
+  * Options: us-east-1, us-west-2, ap-northeast-1, eu-west-1
+
+#### Deployment Process
+
+1. Click the Launch Stack button above
+2. Configure parameters (or use defaults)
+3. Acknowledge IAM resource creation
+4. Click "Create stack"
+5. Wait for email notification (~10-15 minutes)
+6. Use the Runtime ARN from the email to invoke your agent
+
+### Manual Deployment with CDK
+
+For advanced users who want more control over the deployment:
+
+#### Prerequisites
 
 - AWS CLI configured with appropriate permissions
 - Python 3.11+ with `uv` package manager
 - Docker (for container builds)
 - Node.js 18+ (for CDK)
 
-### Deploy with CDK
+#### Deploy with CDK
 
 1. **Bootstrap CDK** (first time only):
    ```bash
