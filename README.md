@@ -15,7 +15,7 @@ An AI-powered customer support agent that serves as an alternative to traditiona
 
 Deploy the Personal Support Agent with a single click using AWS CloudFormation:
 
-[![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/review?stackName=PersonalSupportAgentStack&templateURL=https://raw.githubusercontent.com/icoxfog417/personal-account-manager/main/PersonalSupportAgentDeploymentStack.yaml)
+[![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/review?stackName=PersonalSupportAgentStack&templateURL=https://aws-ml-jp.s3.ap-northeast-1.amazonaws.com/asset-deployments/agents/PersonalSupportAgentDeploymentStack.yaml)
 
 #### Parameters
 

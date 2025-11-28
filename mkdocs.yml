@@ -1,0 +1,87 @@
+# Project
+site_name: Personal AWS Support Agent
+site_description: AI-powered customer support agent built with Strands Agent and AgentCore Runtime
+copyright: Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+site_author: AWS
+site_url: https://icoxfog417.github.io/personal-account-manager/
+
+# Repository
+repo_name: "Github: personal-account-manager"
+repo_url: "https://github.com/icoxfog417/personal-account-manager"
+
+# Plugins
+plugins:
+  - search:
+      separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  - minify:
+      minify_html: true
+
+# Theme
+theme:
+  name: material
+  palette:
+    primary: indigo
+    accent: pink
+  features:
+    - toc.integrate
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
+    - navigation.footer
+    - navigation.tracking
+    - navigation.sections
+    - navigation.expand
+    - content.action.edit
+    - search.highlight
+    - search.suggest
+  font:
+    text: 'Roboto'
+    code: 'Roboto Mono'
+  icon:
+    logo: material/robot
+    repo: fontawesome/brands/git-alt
+
+extra_css:
+  - stylesheets/extra.css
+
+# extras and additional configuration
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/icoxfog417/personal-account-manager
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - def_list
+  - md_in_html
+  - pymdownx.mark
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tabbed:
+      alternate_style: true
+
+# Website Page Tree
+nav:
+  - Home: 'index.md'
+  - About AWS:
+    - 'AWS Questions': 'AWS-General/aws_questions.md'
+    - 'Bedrock FAQ': 'AWS-General/bedrock_faq.md'
+  - About GenU:
+    - 'Overview & Setup': 'GenU/chapter1_overview_setup.md'
+    - 'Chat Functionality': 'GenU/chapter2_chat_functionality.md'
+    - 'RAG Functionality': 'GenU/chapter3_rag_functionality.md'
+    - 'Generation Functions': 'GenU/chapter4_generation_functions.md'
+    - 'Image & Voice': 'GenU/chapter5_image_voice.md'
+    - 'Writing & Meeting': 'GenU/chapter6_writing_meeting.md'
+    - 'Use Case Builder': 'GenU/chapter7_usecase_builder.md'
+    - 'Deployment': 'GenU/chapter8_deployment.md'
+    - 'Security': 'GenU/chapter9_security.md'

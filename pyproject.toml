@@ -18,3 +18,8 @@ dev = [
     "pytest>=8.4.2",
     "ruff>=0.14.1",
 ]
+docs = [
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
+    "mkdocs-minify-plugin>=0.8.0",
+]
