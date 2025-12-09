@@ -17,7 +17,7 @@ def temp_dir():
 
 def test_clone_repository(temp_dir):
     """Test cloning repository."""
-    repo_url = "https://github.com/icoxfog417/personal-account-manager"
+    repo_url = "sample-personal-aws-customer-assistant"
     knowledge_dir = "docs"
     local_path = temp_dir / "repo"
     
@@ -31,7 +31,7 @@ def test_clone_repository(temp_dir):
 
 def test_list_files(temp_dir):
     """Test listing files in knowledge directory."""
-    repo_url = "https://github.com/icoxfog417/personal-account-manager"
+    repo_url = "sample-personal-aws-customer-assistant"
     knowledge_dir = "docs"
     local_path = temp_dir / "repo"
     
@@ -46,7 +46,7 @@ def test_list_files(temp_dir):
 
 def test_load_file(temp_dir):
     """Test loading file contents."""
-    repo_url = "https://github.com/icoxfog417/personal-account-manager"
+    repo_url = "sample-personal-aws-customer-assistant"
     knowledge_dir = "docs"
     local_path = temp_dir / "repo"
     
@@ -65,7 +65,7 @@ def test_load_file(temp_dir):
 
 def test_update_repository(temp_dir):
     """Test updating existing repository."""
-    repo_url = "https://github.com/icoxfog417/personal-account-manager"
+    repo_url = "sample-personal-aws-customer-assistant"
     knowledge_dir = "docs"
     local_path = temp_dir / "repo"
     

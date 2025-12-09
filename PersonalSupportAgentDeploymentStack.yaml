@@ -27,7 +27,7 @@ Parameters:
 
   RepositoryUrl:
     Type: String
-    Default: "https://github.com/icoxfog417/personal-account-manager"
+    Default: "sample-personal-aws-customer-assistant"
     Description: Git repository URL containing knowledge documents
 
   KnowledgeDirectory:
@@ -118,7 +118,7 @@ Resources:
             pre_build:
               commands:
                 - echo "Cloning repository..."
-                - git clone https://github.com/icoxfog417/personal-account-manager.git
+                - git clone sample-personal-aws-customer-assistant.git
                 - cd personal-account-manager/cdk
                 - echo "Installing CDK dependencies..."
                 - npm ci

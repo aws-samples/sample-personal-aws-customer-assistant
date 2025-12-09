@@ -13,7 +13,7 @@ def agent():
     """Create SupportAgent with actual repository."""
     # Use the actual repository that's already cloned
     return SupportAgent(
-        repo_url="https://github.com/icoxfog417/personal-account-manager",
+        repo_url="sample-personal-aws-customer-assistant",
         knowledge_dir="docs",
         local_path="./repo_data"
     )

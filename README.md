@@ -1,11 +1,10 @@
-# AWS Customer Support Agent
+# Personal AWS customer assistant
 
 An AI-powered customer support agent that serves as an alternative to traditional account managers, built with Strands Agent and deployed on AgentCore Runtime.
 
 ## Features
 
 - **Knowledge Integration**: Searches repository documentation from GitHub
-- **Conversation Memory**: Stores customer context using AgentCore Memory (STM + LTM)
 - **Serverless Deployment**: Runs on AgentCore Runtime with auto-scaling
 - **One-Click Deployment**: Deploy via CloudFormation with custom knowledge sources
 
@@ -13,7 +12,7 @@ An AI-powered customer support agent that serves as an alternative to traditiona
 
 ### One-Click Deployment
 
-Deploy the Personal Support Agent with a single click using AWS CloudFormation:
+Deploy the Personal AWS customer assistant with a single click using AWS CloudFormation:
 
 [![Launch Stack](https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png)](https://console.aws.amazon.com/cloudformation/home#/stacks/create/review?stackName=PersonalSupportAgentStack&templateURL=https://aws-ml-jp.s3.ap-northeast-1.amazonaws.com/asset-deployments/agents/PersonalSupportAgentDeploymentStack.yaml)
 
@@ -23,7 +22,7 @@ Deploy the Personal Support Agent with a single click using AWS CloudFormation:
   * Email address for deployment notifications
   * You will receive deployment start and completion notifications
 
-* **RepositoryUrl** (Default: `https://github.com/icoxfog417/personal-account-manager`)
+* **RepositoryUrl** (Default: `https://github.com/aws-samples/sample-personal-aws-customer-assistant`)
   * Git repository URL containing knowledge documents
   * Customize to use your own knowledge base
 
@@ -53,7 +52,7 @@ For advanced users who want more control over the deployment:
 - AWS CLI configured with appropriate permissions
 - Python 3.11+ with `uv` package manager
 - Docker (for container builds)
-- Node.js 18+ (for CDK)
+- Node.js 20+ (for CDK)
 
 #### Deploy with CDK
 
@@ -114,91 +113,9 @@ For advanced users who want more control over the deployment:
 │   ├── app.py
 │   └── support_agent_stack.py
 ├── tests/             # Unit and integration tests
-└── spec/              # Design documentation
+└── docs/              # Documentation : This directory is referred by an agent
 ```
-
-## Configuration
-
-Key environment variables:
-
-- `AWS_REGION`: AWS region for Bedrock and AgentCore
-- `MEMORY_ID`: AgentCore Memory resource ID (optional)
-- Repository URL and paths configured in agent code
-
-## Development Guidelines
-
-Follow the coding standards in `.kiro/steering/`:
-
-- Use `uv run` for all Python operations
-- Type hints required for all functions
-- Use f-strings for string formatting
-- Test with `pytest`, format with `ruff`
-- Follow test-first interface design workflow
-
-## Deployment
-
-### CDK Deployment
-
-1. **Install Dependencies**:
-   ```bash
-   cd cdk
-   python -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
-
-2. **Deploy Stack**:
-   ```bash
-   cdk deploy
-   ```
-   
-   This automatically:
-   - Builds Docker image from `agent/` directory
-   - Pushes to auto-created ECR repository
-   - Creates AgentCore Runtime with execution role
-   - Configures CloudWatch Logs and X-Ray tracing
-
-3. **Test Deployed Agent**:
-   ```bash
-   RUNTIME_ARN=$(aws cloudformation describe-stacks \
-     --stack-name SupportAgentStack \
-     --query 'Stacks[0].Outputs[?OutputKey==`AgentRuntimeArn`].OutputValue' \
-     --output text)
-   
-   aws bedrock-agentcore invoke-agent-runtime \
-     --agent-runtime-arn $RUNTIME_ARN \
-     --qualifier DEFAULT \
-     --payload $(echo '{"prompt": "What is AWS Lambda?"}' | base64) \
-     response.json
-   ```
-
-4. **View Logs**:
-   ```bash
-   aws logs tail /aws/bedrock-agentcore/runtimes/$RUNTIME_ARN --follow
-   ```
-
-### Deployment Time
-
-- Docker build and push: ~3-5 minutes
-- Runtime provisioning: ~2-3 minutes
-- Total: ~5-8 minutes
-
-### Required IAM Permissions
-
-- `BedrockAgentCoreFullAccess` managed policy
-- `AmazonBedrockFullAccess` managed policy
-- IAM role creation permissions
-- ECR repository management
-- CloudFormation stack operations
-
-## Cost Optimization
-
-- **Pay-per-request**: No idle costs with AgentCore Runtime
-- **Prompt caching**: Reduces Bedrock token costs
-- **File-based search**: No vector database costs in Phase 1
-- **Auto-scaling**: Resources scale with demand
-- **Managed services**: Minimal infrastructure overhead
-
+d
 ## GenU Integration
 
 This agent is designed to integrate with [GenU](https://github.com/aws-samples/generative-ai-use-cases) through the [one-click deployment process](https://github.com/aws-samples/sample-one-click-generative-ai-solutions).
@@ -210,23 +127,11 @@ The CDK stack is automatically tagged with `Integration:GenU`, which enables:
 
 To deploy with GenU integration, simply deploy this stack using CDK and the one-click deployment process will automatically detect and register it.
 
-## Phase 1 Scope
-
-This implementation focuses on:
-
-✅ Repository document integration (clone + file search)  
-✅ Conversation memory (STM + LTM via AgentCore)  
-✅ Basic Q&A with context retrieval  
-✅ Strands Agent with `@tool` decorator  
-✅ CDK deployment with Docker image assets  
-
-Phase 2 will add email interface, command execution, and external knowledge sources.
-
 ## Support
 
 For issues or questions:
 
-1. Check the [GitHub Issues](https://github.com/icoxfog417/personal-account-manager/issues)
+1. Check the [GitHub Issues](https://github.com/icoxfog417/personal-aws-customer-assistant/issues)
 2. Review the [Design Document](spec/design.md)
 3. Review the [Requirements Document](spec/requirements.md)
 

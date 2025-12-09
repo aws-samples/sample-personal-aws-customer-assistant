@@ -28,4 +28,4 @@ AWS の一般的な質問や GenU をはじめとしたソリューションの�
 
 ## リポジトリ
 
-[GitHub Repository](https://github.com/icoxfog417/personal-account-manager)
+[GitHub Repository](sample-personal-aws-customer-assistant)

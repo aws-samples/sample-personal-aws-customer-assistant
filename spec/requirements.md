@@ -19,7 +19,7 @@ Build an AWS customer support agent that serves as an alternative to traditional
 
 ## Approach
 
-* Integrate all necessary information in repository documentation at `https://github.com/icoxfog417/personal-account-manager`
+* Integrate all necessary information in repository documentation at `sample-personal-aws-customer-assistant`
 * Build an AI agent that answers customer questions by referencing documentation files (markdown files, PDFs, YouTube videos, etc.)
 * Enable customers to interact with the agent and delegate trustworthy operations (setting billing alerts, applying credits, etc.)
 * Store customer-specific issues alongside documentation content to enable personalization

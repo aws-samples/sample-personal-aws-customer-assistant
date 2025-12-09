@@ -20,7 +20,7 @@ class SupportAgent(Agent):
     
     def __init__(
         self,
-        repo_url: str = "https://github.com/icoxfog417/personal-account-manager",
+        repo_url: str = "sample-personal-aws-customer-assistant",
         knowledge_dir: str = "docs",
         local_path: str = "./repo_data",
         system_prompt: Optional[str] = None,

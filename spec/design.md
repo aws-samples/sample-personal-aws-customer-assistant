@@ -165,7 +165,7 @@ graph TB
 - Log aggregation for debugging
 
 **Repository Documents**
-- Source: `https://github.com/icoxfog417/personal-account-manager`
+- Source: `sample-personal-aws-customer-assistant`
 - Access: GitPython clone (no authentication needed for public repository)
 - Update: Periodic pull or on-demand
 
@@ -495,7 +495,7 @@ app = BedrockAgentCoreApp()
 @app.entrypoint
 async def entrypoint(payload):
     agent = SupportAgent(
-        repo_url="https://github.com/icoxfog417/personal-account-manager",
+        repo_url="sample-personal-aws-customer-assistant",
         knowledge_dir="docs",
         local_path="./repo_data"
     )

@@ -8,7 +8,7 @@ app = BedrockAgentCoreApp()
 @app.entrypoint
 async def entrypoint(payload):
     # Read configuration from environment variables
-    repo_url = os.getenv("AGENT_REPO_URL", "https://github.com/icoxfog417/personal-account-manager")
+    repo_url = os.getenv("AGENT_REPO_URL", "sample-personal-aws-customer-assistant")
     knowledge_dir = os.getenv("AGENT_KNOWLEDGE_DIR", "docs")
     local_path = os.getenv("AGENT_LOCAL_PATH", "./repo_data")
     system_prompt = os.getenv("AGENT_SYSTEM_PROMPT")

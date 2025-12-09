@@ -7,7 +7,7 @@ site_url: https://icoxfog417.github.io/personal-account-manager/
 
 # Repository
 repo_name: "Github: personal-account-manager"
-repo_url: "https://github.com/icoxfog417/personal-account-manager"
+repo_url: "sample-personal-aws-customer-assistant"
 
 # Plugins
 plugins:
@@ -48,7 +48,7 @@ extra_css:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/icoxfog417/personal-account-manager
+      link: sample-personal-aws-customer-assistant
 
 # Extensions
 markdown_extensions:
