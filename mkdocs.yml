@@ -1,13 +1,13 @@
 # Project
-site_name: Personal AWS Support Agent
+site_name: Personal AWS customer assistant
 site_description: AI-powered customer support agent built with Strands Agent and AgentCore Runtime
 copyright: Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 site_author: AWS
-site_url: https://icoxfog417.github.io/personal-account-manager/
+site_url: https://aws-samples.github.io/sample-personal-aws-customer-assistant/
 
 # Repository
-repo_name: "Github: personal-account-manager"
-repo_url: "sample-personal-aws-customer-assistant"
+repo_name: "Github: sample-personal-aws-customer-assistant"
+repo_url: "https://github.com/aws-samples/sample-personal-aws-customer-assistant"
 
 # Plugins
 plugins:
@@ -48,7 +48,7 @@ extra_css:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: sample-personal-aws-customer-assistant
+      link: https://github.com/aws-samples/sample-personal-aws-customer-assistant
 
 # Extensions
 markdown_extensions:
