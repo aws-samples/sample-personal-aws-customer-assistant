@@ -115,7 +115,7 @@ For advanced users who want more control over the deployment:
 ├── tests/             # Unit and integration tests
 └── docs/              # Documentation : This directory is referred by an agent
 ```
-d
+
 ## GenU Integration
 
 This agent is designed to integrate with [GenU](https://github.com/aws-samples/generative-ai-use-cases) through the [one-click deployment process](https://github.com/aws-samples/sample-one-click-generative-ai-solutions).
